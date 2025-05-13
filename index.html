@@ -1,0 +1,40 @@
+<!-- Toek Assistant Webapp: Simpele frontend -->
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toek Assistent</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 3rem auto; padding: 1rem; background: #f8f8f8; }
+    textarea, button { width: 100%; font-size: 1rem; margin-top: 1rem; }
+    button { padding: 0.75rem; background: #00796b; color: white; border: none; cursor: pointer; }
+    button:hover { background: #004d40; }
+    .output { margin-top: 2rem; background: white; padding: 1rem; border-radius: 6px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Toek Assistent</h1>
+  <p>Voer je vraag of tekst in. De Toek-stijl doet de rest.</p>
+  <textarea id="userInput" rows="6" placeholder="Bijv: Herschrijf deze zin in Toek-stijl..."></textarea>
+  <button onclick="sendToek()">Stuur naar Toek</button>
+  <div class="output" id="responseBox"></div>
+
+  <script>
+    async function sendToek() {
+      const input = document.getElementById('userInput').value;
+      const responseBox = document.getElementById('responseBox');
+      responseBox.innerText = 'Toek denkt na...';
+
+      const res = await fetch('/api/toek', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: input })
+      });
+
+      const data = await res.json();
+      responseBox.innerText = data.output || 'Geen antwoord ontvangen.';
+    }
+  </script>
+</body>
+</html>
